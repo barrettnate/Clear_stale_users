@@ -27,14 +27,15 @@ Function Check-RunAsAdministrator()
  
     }
 }
- 
-#Check Script is running with Elevated Privileges
-Check-RunAsAdministrator
 
 Function Clear_Stale_Users()
 {
-# Prompt the user for the number of days. Uncomment to create 
+
+#Prompt the user for the number of days. Uncomment to create an automated version. 
 #$days = Read-Host "Enter the number of days to keep profiles"
+
+#Comment this to make interactive
+$days = 60
 
 # Define the list of users to protect
 $protected_users = @("administrator","cplapsadmin","all users","default","default user","public","USEP_Barrett","nate barrett")
@@ -46,21 +47,19 @@ $profiles = Get-ChildItem -Path "C:\Users" -Directory
 foreach ($profile in $profiles) {
     $username = $profile.Name
     $last_write = $profile.LastWriteTime
-    
-    #$age = New-TimeSpan -Start $last_write -End (Get-Date)
     $age = $last_write | New-TimeSpan
     Write-Host $age
-    # Skip the profile if it belongs to a protected user
+    
+    #Skip the profile if it belongs to a protected user
     if ($protected_users -contains $username) {
         Write-Host "Skipping protected user profile: $username"
         continue
     }
     
-    # Delete the profile if it's older than the specified number of days
+    #Delete the profile if it's older than the specified number of days
     if ($age.TotalDays -ge $days) {
         Write-Host "Deleting user profile: $username"
-        Remove-Item -Path $profile.FullName -Recurse -Force
-        
+        Remove-Item -Path $profile.FullName -Recurse -Force   
     }
 }
 #Exit and delete the script
