@@ -37,13 +37,13 @@ Function Clear_Stale_Users()
 #Comment this to make interactive
 $days = 60
 
-# Define the list of users to protect
+#Define the list of users to protect
 $protected_users = @("administrator","cplapsadmin","all users","default","default user","public","USEP_Barrett","nate barrett")
 
-# Get a list of all user profiles
+#Get a list of all user profiles
 $profiles = Get-ChildItem -Path "C:\Users" -Directory
 
-# Loop through each profile and delete if it's older than the specified number of days
+#Loop through each profile and delete if it's older than the specified number of days
 foreach ($profile in $profiles) {
     $username = $profile.Name
     $last_write = $profile.LastWriteTime
